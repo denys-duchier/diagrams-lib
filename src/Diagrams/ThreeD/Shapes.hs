@@ -16,8 +16,8 @@
 
 module Diagrams.ThreeD.Shapes
        (
-         Ellipsoid(..)
-       , sphere
+         Ellipsoid(..), Box(..)
+       , sphere, cube}
        ) where
 
 import Prelude hiding (minimum)
@@ -45,6 +45,7 @@ instance IsPrim Ellipsoid
 instance Renderable Ellipsoid NullBackend where
   render _ _ = mempty
 
+-- | A sphere of radius 1 with its center at the origin.
 sphere :: (Backend b R3, Renderable Ellipsoid b) => Diagram b R3
 sphere = mkQD (Prim $ Ellipsoid mempty)
               (mkEnvelope sphereEnv)
@@ -71,6 +72,8 @@ instance IsPrim Box
 instance Renderable Box NullBackend where
     render _ _ = mempty
 
+-- | A cube with side length 1, in the positive octant, with one
+-- vertex at the origin.
 cube :: (Backend b R3, Renderable Box b) => Diagram b R3
 cube = mkQD (Prim $ Box mempty)
             (mkEnvelope boxEnv)
