@@ -61,13 +61,13 @@ direction v
   (x,y,z) = unr3 v
   φ = Rad . asin $ z / r
   θ = Rad . atan2 y $ x
-  zero = Rad $ 0
+  zero = Rad 0
 
 -- | @fromDirection d@ is the unit vector in the direction @d@.
 fromDirection :: Direction d => d -> R3
 fromDirection (toSpherical -> (Spherical θ' φ')) = r3 (x,y,z) where
-  θ = getRad $ θ'
-  φ = getRad $ φ'
+  θ = getRad θ'
+  φ = getRad φ'
   x = cos θ * cos φ
   y = sin θ * cos φ
   z = sin φ

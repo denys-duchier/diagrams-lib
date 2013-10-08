@@ -1,7 +1,6 @@
 {-# LANGUAGE TypeFamilies
            , FlexibleContexts
            , MultiParamTypeClasses
-           , ViewPatterns
   #-}
 -----------------------------------------------------------------------------
 -- |
@@ -21,7 +20,6 @@ module Diagrams.ThreeD.Shapes
        ) where
 
 import Prelude hiding (minimum)
-import Control.Newtype
 import Data.Semigroup
 
 import Data.AffineSpace
@@ -117,12 +115,12 @@ frustrum r0 r1 = mkQD (Prim $ Frustrum r0 r1 mempty)
                  (Query frQuery)
   where
     projectXY u = u ^-^ (u <.> unitZ) *^ unitZ
-    frQuery v = Any $ and [x >= 0, x <= 1, a <= r] where
+    frQuery v = Any $ x >= 0 && x <= 1 && a <= r where
       (x, _, z) = unp3 v
       r = r0 + (r1-r0)*z
       v' = v .-. origin
       a = magnitude $ projectXY v'
-    frEnv v = (maximum $ map (normalized v <.>) corners) / magnitude v
+    frEnv v = maximum (map (normalized v <.>) corners) / magnitude v
       where
         v' = normalized $ projectXY v
         corners = [r0 *^ v', r1 *^ v']
@@ -131,16 +129,16 @@ frustrum r0 r1 = mkQD (Prim $ Frustrum r0 r1 mempty)
         (px, py, pz) = unp3 p
         (vx, vy, vz) = unr3 v
         dr = r1-r0
-        a = vx^2 + vy^2 - vz^2 * dr^2
-        b = 2 * (px * vx + py * vy - pz * vz * dr^2 - vz * dr * r0)
-        c = px^2 + py^2 - pz^2 * dr^2 + 2 * pz * dr * r0 + r0^2
+        a = vx**2 + vy**2 - vz**2 * dr**2
+        b = 2 * (px * vx + py * vy - pz * vz * dr**2 - vz * dr * r0)
+        c = px**2 + py**2 - pz**2 * dr**2 + 2 * pz * dr * r0 + r0**2
         ends = concatMap cap [0,1]
         cap z = if rt < r0 + z*dr
                 then [t]
                 else []
           where
             t = (z - pz) / vz
-            rt = sqrt $ (px + vx*t)^2 + (py + vy*t)^2
+            rt = sqrt $ (px + vx*t)**2 + (py + vy*t)**2
 
 
 -- | A cone with its base centered on the origin, with radius 1 at the
