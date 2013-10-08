@@ -84,7 +84,7 @@ cube = mkQD (Prim $ Box mempty)
   where
     corners = [(0,0,0), (0,0,1), (0,1,0), (0,1,1),
                (1,0,0), (1,0,1), (1,1,0), (1,1,1)]
-    boxEnv v = (maximum $ map ((normalized v <.>) . r3) corners) / magnitude v
+    boxEnv v = maximum (map ((normalized v <.>) . r3) corners) / magnitude v
     boxTrace p v = minimum . filter (range . atT) $ ts where
       (x0, y0, z0) = unp3 p
       (vx, vy, vz) = unr3 v
