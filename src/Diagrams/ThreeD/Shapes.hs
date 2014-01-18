@@ -81,7 +81,9 @@ cube = mkQD (Prim $ Box mempty)
     corners = [(0,0,0), (0,0,1), (0,1,0), (0,1,1),
                (1,0,0), (1,0,1), (1,1,0), (1,1,1)]
     boxEnv v = maximum (map ((normalized v <.>) . r3) corners) / magnitude v
-    boxTrace p v = minimum . filter (range . atT) $ ts where
+    -- ts finds all intersections with the bounding planes of the box
+    -- filter keeps only those actually on the box surface
+    boxTrace p v = mkSortedList . filter (range . atT) $ ts where
       (x0, y0, z0) = unp3 p
       (vx, vy, vz) = unr3 v
       ts = [-x0/vx, (1-x0)/vx, -y0/vy, (1-y0)/vy, -z0/vz, (1-z0)/vz]
@@ -122,7 +124,7 @@ frustrum r0 r1 = mkQD (Prim $ Frustrum r0 r1 mempty)
       where
         v' = normalized $ projectXY v
         corners = [r0 *^ v', r1 *^ v']
-    frTrace p v = minimum $ quadForm a b c ++ ends
+    frTrace p v = mkSortedList $ quadForm a b c ++ ends
       where
         (px, py, pz) = unp3 p
         (vx, vy, vz) = unr3 v
